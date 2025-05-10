@@ -1,15 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { NgIf, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-diary',
   templateUrl: './diary.component.html',
   styleUrls: ['./diary.component.css']
 })
-export class DiaryComponent {
+export class DiaryComponent implements OnInit {
+
+  allEntries: string[] = [];  // Class property to hold the data
+
   constructor(private authService: AuthService) {}
 
-  logout() {
+  ngOnInit(): void {
+    this.authService.getAllEntries().subscribe({
+      next: (response) => {
+        console.log('Data:', response);
+        this.allEntries = response;  // Assign the data to the class property
+      },
+      error: (err) => console.error('Error:', err)
+    });
+  }
+
+  logout(): void {
     this.authService.logout();
   }
 }

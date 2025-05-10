@@ -1,7 +1,15 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
+<div class="min-h-screen flex items-center justify-center bg-red-200">
   <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
     <h1 class="text-2xl font-bold mb-4">Diary Page</h1>
     <p>Welcome to your diary. You are successfully logged in!</p>
+
+    <div *ngIf="allEntries.length > 0">
+      <h2 class="text-xl font-bold mb-4">Today's Entries</h2>
+      <ul class="list-disc ml-4">
+        <li *ngFor="let entry of allEntries">
+          <p>{{ entry }}</p>
+        </li>
+      </ul>
     <button class="mt-4 bg-red-500 text-white py-2 px-4 rounded" (click)="logout()">
       Logout
     </button>
