@@ -7,7 +7,7 @@ import { AuthGuard } from './app/guards/auth.guard';
 import { importProvidersFrom } from '@angular/core';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor } from '@angular/common';
+import { NgIf, NgFor, DatePipe } from '@angular/common';
 
 
 bootstrapApplication(AppComponent, {
