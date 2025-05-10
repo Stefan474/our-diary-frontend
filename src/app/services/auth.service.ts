@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,10 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken');
+    console.log('Retrieved token:', token);
+    return token;
+
   }
 
   getTokenExpiration(): Date | null {
@@ -41,13 +44,14 @@ export class AuthService {
     if (!token) return null;
 
     try {
-      const decoded: any = jwtDecode(token);
+      const decoded: any = jwtDecode(token);  //
       return new Date(decoded.exp * 1000);
     } catch (error) {
       console.error('Error decoding token:', error);
       return null;
     }
   }
+
 
   isTokenExpired(): boolean {
     const expiration = this.getTokenExpiration();
