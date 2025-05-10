@@ -1,0 +1,47 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full">
+
+    <!-- Left Column - Image -->
+    <div class="w-1/2 hidden md:block">
+      <img
+        src="https://i.ytimg.com/vi/u7SbGrPBugA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgVCg6MA8=&rs=AOn4CLBBNLxZmawMIPnUzXSACLmawQoL1Q"
+        alt="Login"
+        class="h-full w-full object-cover"
+      />
+    </div>
+
+    <!-- Right Column - Form -->
+    <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+      <h2 class="text-2xl font-bold mb-1 text-gray-800">Welcome Back</h2>
+      <p class="mb-4">Sign in to your account</p>
+
+      <div class="mb-4">
+        <input
+        [(ngModel)]="email"
+          type="text"
+          placeholder="Email"
+          class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="mb-6">
+        <input
+        [(ngModel)]="password"
+          type="password"
+          placeholder="Password"
+          class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="flex justify-start gap-2 items-center mb-6">
+        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all" (click)="handleLogin()">
+          Login
+        </button>
+
+        <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded" (click)="handleRegister()">
+          Register
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
