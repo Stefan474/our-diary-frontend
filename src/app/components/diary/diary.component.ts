@@ -10,13 +10,13 @@ import { NgIf, NgFor } from '@angular/common';
 })
 export class DiaryComponent implements OnInit {
 
-  allEntries: string[] = [];  // Class property to hold the data
+  allEntries: any = [] ;  // Class property to hold the data
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.getAllEntries().subscribe({
-      next: (response) => console.log('Data:', response),
+      next: (response) => {console.log('Data:', response); this.allEntries = response;},
       error: (err) => console.error('Error:', err)
     });}
 
