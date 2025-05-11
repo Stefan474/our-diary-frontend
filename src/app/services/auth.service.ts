@@ -5,16 +5,13 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import {jwtDecode} from 'jwt-decode';
 import { tap } from 'rxjs/operators';
-import { catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = environment.apiUrl;
-
-  private userDataKey = 'userData';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -85,42 +82,32 @@ export class AuthService {
   }
 
   getUser(): Observable<any> {
-    const endpoint = `${this.apiUrl}/auth/user`;
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
 
-    return this.http.get(endpoint).pipe(
-      tap((userData) => {
-        console.log('User data fetched:', userData);
-        this.storeUserData(userData);
-      }),
-      catchError((error) => {
-        console.error('Error fetching user data:', error);
-        this.clearUserData();
-        return of(null);  // Return null to avoid breaking the observable chain
-      })
-    );
+    return this.http.get(`${this.apiUrl}/auth/user`, { headers });
+  };
+
+  //connect partner
+  connectPartner(email: string): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  return this.http.post(`${this.apiUrl}/auth/connect-partner`, { partnerEmail: email }, { headers });
   }
 
-  /**
-   * Store user data in localStorage.
-   */
-  private storeUserData(userData: any): void {
-    localStorage.setItem(this.userDataKey, JSON.stringify(userData));
+  //adding posts
+  addPost(message: string): Observable<any> {
+    const token = this.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  return this.http.post(`${this.apiUrl}/entry`, { note: message }, { headers });
   }
-
-  /**
-   * Retrieve user data from localStorage.
-   */
-  getUserData(): any {
-    const userData = localStorage.getItem(this.userDataKey);
-    return userData ? JSON.parse(userData) : null;
-  }
-
-  /**
-   * Clear user data from localStorage.
-   */
-  private clearUserData(): void {
-    localStorage.removeItem(this.userDataKey);
-  }
-
 
 }
+
+
