@@ -3,7 +3,7 @@
 This is the Angular frontend for the Our-Diary project, a shared calendar/diary app built to demonstrate CRUD operations, user authentication, and reactive data handling using Angular. The backend is powered by .NET Core 8 Web API, while the frontend leverages Angular for a modular, component-driven architecture.
 
 ### Tech Stack
-- **Angular 16** - Frontend framework
+- **Angular** - Frontend framework
 - **RxJS** - Reactive programming
 - **Angular Router** - Client-side routing
 - **Angular Guards** - Route protection
