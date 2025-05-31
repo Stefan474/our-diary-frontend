@@ -1,59 +1,32 @@
-# OurDiaryFrontend
+## Our-Diary Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+This is the Angular frontend for the Our-Diary project, a shared calendar/diary app built to demonstrate CRUD operations, user authentication, and reactive data handling using Angular. The backend is powered by .NET Core 8 Web API, while the frontend leverages Angular for a modular, component-driven architecture.
 
-## Development server
+### Tech Stack
+- **Angular** - Frontend framework
+- **RxJS** - Reactive programming
+- **Angular Router** - Client-side routing
+- **Angular Guards** - Route protection
+- **Angular Interceptors** - HTTP request/response handling
+- **Tailwind CSS** - Styling
+  
+### Features
+- **User Authentication:** Login and session management via JWT
+- **Diary Entry Management:** Create and read data entries (update delete left out on purpose) 
+- **Reactive Data Handling:** RxJS Observables for state management
+- **HTTP Interceptor:** Automatic JWT attachment to outgoing HTTP requests
+- **Route Guards:** Protect routes based on authentication state
 
-To start a local development server, run:
+### Project Screenshots
+<img src="https://i.imgur.com/nSPiqEM.png" alt="Image 1" width="700"/>
+<img src="https://i.imgur.com/OAVy8H2.png" alt="Image 2" width="700"/>
+<img src="https://i.imgur.com/yqQzB4z.png" alt="Image 3" width="700"/>
+<img src="https://i.imgur.com/ASoxhxq.png" alt="Image 4" width="700"/>
+<img src="https://i.imgur.com/ExohBvg.png" alt="Image 5" width="700"/>
 
-```bash
-ng serve
-```
+### Next Steps
+- Implement data caching using BehaviorSubject
+- Add user profile management
+- Enhance error handling and user feedback
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+For any questions or feedback, feel free to reach out!
