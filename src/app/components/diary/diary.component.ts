@@ -18,6 +18,7 @@ export class DiaryComponent implements OnInit {
   message: string = '';
   dayNumbers: number[] = [];
   currentMonth: string = '';
+  currentDay: number = 0;
 
   constructor(private authService: AuthService) { }
 
@@ -31,7 +32,7 @@ export class DiaryComponent implements OnInit {
     const today = new Date();
     const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     this.dayNumbers = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-
+    this.currentDay = today.getDate();
 
   }
 
@@ -135,6 +136,7 @@ export class DiaryComponent implements OnInit {
     });
     this.addEntry = false;
   }
+
 
 }
 
