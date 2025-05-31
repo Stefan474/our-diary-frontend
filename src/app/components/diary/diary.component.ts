@@ -12,21 +12,28 @@ import { FormsModule, NgModel } from '@angular/forms';
 })
 export class DiaryComponent implements OnInit {
 
-  allEntries: any = [] ;  // Class property to hold the data
+  allEntries: any = [];  // Class property to hold the data
   user: any;
-  partnerEmail: string= '';
+  partnerEmail: string = '';
   message: string = '';
+  dayNumbers: number[] = [];
+  currentMonth: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
     this.authService.getAllEntries().subscribe({
-      next: (response) => {console.log('Data:', response); this.allEntries = response;},
+      next: (response) => { console.log('Data:', response); this.allEntries = response; },
       error: (err) => console.error('Error:', err)
     });
     this.getUser();
+    this.currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    const today = new Date();
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    this.dayNumbers = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-}
+
+  }
 
   ngAfterViewInit(): void {
 
@@ -34,14 +41,14 @@ export class DiaryComponent implements OnInit {
       this.message = "Enter your partner's email to connect!"
     }
     else {
-    this.message = "Waiting for partner's response! Once you are connected press the comfirm button below to begin!"
+      this.message = "Waiting for partner's response! Once you are connected press the comfirm button below to begin!"
     }
   }
 
   ngOnChanges(): void {
     console.log('ngOnChanges() called');
     this.authService.getAllEntries().subscribe({
-      next: (response) => {console.log('Data:', response); this.allEntries = response;},
+      next: (response) => { console.log('Data:', response); this.allEntries = response; },
       error: (err) => console.error('Error:', err)
     });
 
@@ -55,6 +62,8 @@ export class DiaryComponent implements OnInit {
   errorData: any = null;
   decodedToken: any = null;
   tokenExpiration: string = 'Not available';
+
+
 
   getUser(): void {
     console.log('Testing getUser()...');
@@ -114,7 +123,8 @@ export class DiaryComponent implements OnInit {
   }
 
   entryMessage: string = '';
-  handleEntryPost(): void {;
+  handleEntryPost(): void {
+    ;
     this.authService.addPost(this.entryMessage).subscribe({
       next: (response) => {
         console.log('Entry posted:', response);
@@ -125,4 +135,9 @@ export class DiaryComponent implements OnInit {
     });
     this.addEntry = false;
   }
+
 }
+
+
+
+
