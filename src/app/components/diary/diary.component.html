@@ -5,17 +5,6 @@
       class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl min-h-screen min-w-1/2 hidden"
       *ngIf="user.isConnected"
     >
-      <div class="flex justify-between">
-        <h1 class="text-3xl font-bold mb-2 flex-grow">Our Diary</h1>
-
-        <button
-          class="bg-red-500 text-white py-2 px-4 rounded"
-          (click)="logout()"
-        >
-          Logout
-        </button>
-      </div>
-
       <!-- Partner Entries -->
       <div class="mt-5">
         <h1 class="text-xl font-bold mb-6">Partner Entries</h1>
@@ -70,24 +59,33 @@
       class="bg-white shadow-lg rounded-lg p-8 w-full min-h-screen"
       *ngIf="user.isConnected"
     >
-      <div class="flex gap-2">
-        <button class="bg-pink-300 text-white py-2 px-4 rounded w-[14ch]">
-          Last Month
+      <div class="flex justify-between">
+        <h1 class="text-3xl font-bold mb-2 flex-grow">Our Diary</h1>
+
+        <button
+          class="bg-red-500 text-white py-2 px-4 rounded"
+          (click)="logout()"
+        >
+          Logout
         </button>
-        <button class="bg-pink-300 text-white py-2 px-4 rounded w-[14ch]">
-          Next Month
-        </button>
-        {{ currentMonth }}
       </div>
-      <ul class="grid grid-cols-7 grid-rows-5 h-120 w-full mt-5">
+      <div class="mt-5 flex bg-red-400 w-full p-4 rounded-t-lg">
+        <div class="flex gap-2">
+          <p class="text-white text-xl font-bold">
+            {{ currentMonth }}
+          </p>
+        </div>
+      </div>
+      <ul class="grid grid-cols-7 grid-rows-5 h-120 w-full">
         <li
           class="col-span-1 row-span-1 w-full h-full"
           *ngFor="let day of dayNumbers"
         >
-          <div class="w-full h-full border-2 border-black">
-            <div *ngIf="allEntries.yourEntries[day]">
+          <div class="w-full h-full border-1 border-pink-400 flex flex-col">
+            <p class="text-lg text-pink-700">{{ day }}</p>
+            <!-- <div *ngIf="allEntries.yourEntries[day]">
               {{ allEntries.yourEntries[day].message }}
-            </div>
+            </div>-->
           </div>
         </li>
       </ul>
