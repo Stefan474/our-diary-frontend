@@ -3,6 +3,9 @@ import { AuthService } from '../../services/auth.service';
 import { NgIf, NgFor } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
+import { entryData } from '../../models/entry-data.model';
+import { User } from '../../models/user.model';
+import { ErrorData } from '../../models/api-error.model';
 
 @Component({
   selector: 'app-diary',
@@ -13,7 +16,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 export class DiaryComponent implements OnInit {
 
   allEntries: any = [];  // Class property to hold the data
-  user: any;
+  user: User = { email: '', isConnected: false, partnerEmail: '' };
   partnerEmail: string = '';
   message: string = '';
   dayNumbers: number[] = [];
@@ -21,6 +24,7 @@ export class DiaryComponent implements OnInit {
   currentDay: number = 0;
 
   constructor(private authService: AuthService) { }
+
 
   ngOnInit(): void {
     this.authService.getAllEntries().subscribe({
@@ -33,7 +37,6 @@ export class DiaryComponent implements OnInit {
     const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     this.dayNumbers = Array.from({ length: daysInMonth }, (_, i) => i + 1);
     this.currentDay = today.getDate();
-
   }
 
   ngAfterViewInit(): void {
@@ -53,15 +56,17 @@ export class DiaryComponent implements OnInit {
       error: (err) => console.error('Error:', err)
     });
 
+    this.currentMonth = 'January';
+
   }
 
   logout(): void {
     this.authService.logout();
   }
 
-  responseData: any = null;
-  errorData: any = null;
-  decodedToken: any = null;
+  responseData: User | null = null;
+  errorData: ErrorData | null = null;
+  decodedToken: string = '';
   tokenExpiration: string = 'Not available';
 
 
@@ -139,6 +144,8 @@ export class DiaryComponent implements OnInit {
 
 
 }
+
+
 
 
 
