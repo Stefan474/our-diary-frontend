@@ -6,12 +6,14 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { entryData } from '../../models/entry-data.model';
 import { User } from '../../models/user.model';
 import { ErrorData } from '../../models/api-error.model';
+import { CalendarGridComponent } from './calendar-grid/calendar-grid.component';
 
 @Component({
   selector: 'app-diary',
+  standalone: true,
   templateUrl: './diary.component.html',
   styleUrls: ['./diary.component.css'],
-  imports: [NgIf, NgFor, DatePipe, FormsModule]
+  imports: [NgIf, NgFor, DatePipe, FormsModule, CalendarGridComponent]
 })
 export class DiaryComponent implements OnInit {
 
@@ -24,6 +26,7 @@ export class DiaryComponent implements OnInit {
   currentDay: number = 0;
 
   constructor(private authService: AuthService) { }
+
 
 
   ngOnInit(): void {
@@ -55,9 +58,6 @@ export class DiaryComponent implements OnInit {
       next: (response) => { console.log('Data:', response); this.allEntries = response; },
       error: (err) => console.error('Error:', err)
     });
-
-    this.currentMonth = 'January';
-
   }
 
   logout(): void {

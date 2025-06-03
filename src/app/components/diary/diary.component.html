@@ -2,7 +2,7 @@
   <div class="min-h-screen flex items-center justify-center bg-red-200 px-36">
     <!--Old UI-->
     <div
-      class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl min-h-screen min-w-1/2 hidden"
+      class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl min-h-screen min-w-1/2"
       *ngIf="user.isConnected"
     >
       <!-- Partner Entries -->
@@ -25,6 +25,8 @@
             </div>
           </li>
         </ul>
+        ---------------------------------
+        <app-calendar-grid [month]="5" [year]="2025"></app-calendar-grid> a
       </div>
       <!-- Your Entries -->
       <div>
@@ -57,7 +59,7 @@
     <!-- New UI -->
     <!--TODO: Re-do the calendar logic and tie a cell to days instead of numbers or make a year constructor-->
     <div
-      class="bg-white shadow-lg rounded-lg p-8 w-full min-h-screen"
+      class="bg-white shadow-lg rounded-lg p-8 w-full min-h-screen hidden"
       *ngIf="user.isConnected"
     >
       <div class="flex justify-between">
@@ -94,21 +96,6 @@
                 >
                   you
                 </p>
-                <img
-                  src="./assets/icons/heart-stamp.png"
-                  class="size-12 opacity-50"
-                  alt="heart-stamp"
-                  *ngIf="allEntries.yourEntries[day] && day <= currentDay"
-                />
-                <img
-                  src="./assets/icons/heart-stamp.png"
-                  class="size-12 opacity-50 grayscale"
-                  alt="heart-stamp"
-                  *ngIf="!allEntries.yourEntries[day]"
-                />
-                <p *ngIf="allEntries.yourEntries[day]">
-                  {{ allEntries.yourEntries[day].message }}
-                </p>
               </div>
               <!-- Partner section -->
               <div
@@ -119,18 +106,6 @@
                 >
                   lover
                 </p>
-                <img
-                  src="./assets/icons/heart-stamp.png"
-                  class="size-12 opacity-50"
-                  alt="heart-stamp"
-                  *ngIf="allEntries.partnerEntries[day] && day <= currentDay"
-                />
-                <img
-                  src="./assets/icons/heart-stamp.png"
-                  class="size-12 opacity-50 grayscale"
-                  alt="heart-stamp"
-                  *ngIf="!allEntries.partnerEntries[day]"
-                />
               </div>
             </div>
             <!-- <div *ngIf="allEntries.yourEntries[day]">

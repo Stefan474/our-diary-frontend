@@ -1,0 +1,10 @@
+<div class="grid grid-cols-7 gap-1">
+  <ng-container *ngFor="let week of calendar">
+    <ng-container *ngFor="let date of week">
+      <div class="border p-2 text-center h-20">
+        aaa
+        <span *ngIf="date">{{ date.getDate() }}</span>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
