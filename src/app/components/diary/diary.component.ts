@@ -22,8 +22,9 @@ export class DiaryComponent implements OnInit {
   partnerEmail: string = '';
   message: string = '';
   dayNumbers: number[] = [];
-  currentMonth: string = '';
+  currentMonth: number = 1;
   currentDay: number = 0;
+  year: number = 2025;
 
   constructor(private authService: AuthService) { }
 
@@ -35,11 +36,10 @@ export class DiaryComponent implements OnInit {
       error: (err) => console.error('Error:', err)
     });
     this.getUser();
-    this.currentMonth = new Date().toLocaleString('default', { month: 'long' });
+    this.currentMonth = new Date().getMonth();
     const today = new Date();
     const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-    this.dayNumbers = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    this.currentDay = today.getDate();
+    this.year = today.getFullYear();
   }
 
   ngAfterViewInit(): void {

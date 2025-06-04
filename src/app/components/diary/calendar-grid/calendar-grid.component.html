@@ -1,5 +1,41 @@
-<div class="grid grid-cols-7 gap-1">
-  <div *ngFor="let date of calendar.flat()" class="border p-2 text-center h-20">
-    <span *ngIf="date">{{ date.getDate() }} </span>
+<div class="calendar-grid">
+  <!-- day header -->
+  <div class="grid grid-cols-7 gap-1 mb-2">
+    <div class="text-center font-semibold p-2">Sun</div>
+    <div class="text-center font-semibold p-2">Mon</div>
+    <div class="text-center font-semibold p-2">Tue</div>
+    <div class="text-center font-semibold p-2">Wed</div>
+    <div class="text-center font-semibold p-2">Thu</div>
+    <div class="text-center font-semibold p-2">Fri</div>
+    <div class="text-center font-semibold p-2">Sat</div>
+  </div>
+
+  <!-- actual calendar grid -->
+  <div class="grid grid-cols-7 gap-1">
+    <ng-container *ngFor="let week of calendar">
+      <div
+        *ngFor="let day of week"
+        class="min-h-24 p-2 border border-gray-200 rounded"
+        [class.bg-gray-100]="!day"
+        [class.bg-blue-50]="hasEntryForDate(day)"
+        [class.bg-white]="day && !hasEntryForDate(day)"
+      >
+        <!-- day number gen -->
+        <div *ngIf="day" class="text-sm font-medium mb-1">
+          {{ day.getDate() }}
+        </div>
+
+        <!-- entry preview -->
+        <div
+          *ngIf="day && hasEntryForDate(day)"
+          class="text-xs text-gray-600 truncate"
+        >
+          {{ getEntryForDate(day)?.message | slice : 0 : 50 }}
+          <span *ngIf="(getEntryForDate(day)?.message?.length || 0) > 50"
+            >...</span
+          >
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>

@@ -26,7 +26,11 @@
           </li>
         </ul>
         ---------------------------------
-        <app-calendar-grid [month]="5" [year]="2025"></app-calendar-grid>
+        <app-calendar-grid
+          [month]="currentMonth"
+          [year]="year"
+          [entries]="allEntries"
+        ></app-calendar-grid>
         a
       </div>
       <!-- Your Entries -->
