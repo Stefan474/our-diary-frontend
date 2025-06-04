@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { NgIf, NgFor } from '@angular/common';
 import { DatePipe } from '@angular/common';
 import { FormsModule, NgModel } from '@angular/forms';
-import { entryData } from '../../models/entry-data.model';
+import { AllEntriesResponse, DiaryEntry } from '../../models/entry-data.model';
 import { User } from '../../models/user.model';
 import { ErrorData } from '../../models/api-error.model';
 import { CalendarGridComponent } from './calendar-grid/calendar-grid.component';
@@ -17,7 +17,7 @@ import { CalendarGridComponent } from './calendar-grid/calendar-grid.component';
 })
 export class DiaryComponent implements OnInit {
 
-  allEntries: any = [];  // Class property to hold the data
+  allEntries: AllEntriesResponse | null = null;  // Class property to hold the data
   user: User = { email: '', isConnected: false, partnerEmail: '' };
   partnerEmail: string = '';
   message: string = '';
@@ -31,7 +31,7 @@ export class DiaryComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getAllEntries().subscribe({
-      next: (response) => { console.log('Data:', response); this.allEntries = response; },
+      next: (response: AllEntriesResponse) => { console.log('Data:', response); this.allEntries = response; },
       error: (err) => console.error('Error:', err)
     });
     this.getUser();

@@ -11,7 +11,7 @@
 
         <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:grid-cols-3">
           <li
-            *ngFor="let entry of allEntries.partnerEntries"
+            *ngFor="let entry of allEntries?.partnerEntries; let i = index"
             class="bg-red-50 shadow-lg rounded-lg p-4 border border-gray-200 flex flex-col justify-between min-h-40"
           >
             <!-- Content Wrapper -->
@@ -26,7 +26,8 @@
           </li>
         </ul>
         ---------------------------------
-        <app-calendar-grid [month]="5" [year]="2025"></app-calendar-grid> a
+        <app-calendar-grid [month]="5" [year]="2025"></app-calendar-grid>
+        a
       </div>
       <!-- Your Entries -->
       <div>
@@ -41,7 +42,7 @@
 
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:grid-cols-3">
             <li
-              *ngFor="let entry of allEntries.yourEntries"
+              *ngFor="let entry of allEntries?.yourEntries"
               class="shadow-lg rounded-lg p-4 border border-gray-200 flex flex-col justify-between min-h-40 bg-red-50"
             >
               <!-- Content Wrapper -->

@@ -1,14 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
+import { DiaryComponent } from '../diary.component';
 
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [],
+  imports: [NgFor, NgIf],
   templateUrl: './calendar-grid.component.html',
 })
 export class CalendarGridComponent implements OnInit {
   @Input() month!: number; // 0-11
   @Input() year!: number;
+  @Input() entries!: any[];
 
   calendar: (Date | null)[][] = [];
 
