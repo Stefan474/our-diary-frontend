@@ -16,6 +16,7 @@ export class CalendarGridComponent implements OnInit {
   calendar: (Date | null)[][] = [];
   yourEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
   partnerEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
+  hoveredDay: number = -1;
 
   ngOnInit() {
     this.generateCalendar(this.year, this.month);

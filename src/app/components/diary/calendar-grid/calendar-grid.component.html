@@ -1,6 +1,6 @@
 <div class="calendar-grid">
   <!-- day header -->
-  <div class="grid grid-cols-7 gap-1 mb-2">
+  <div class="grid grid-cols-7 gap-1 bg-primary text-white rounded-t-lg">
     <div class="text-center font-semibold p-2">Sun</div>
     <div class="text-center font-semibold p-2">Mon</div>
     <div class="text-center font-semibold p-2">Tue</div>
@@ -15,19 +15,30 @@
     <ng-container *ngFor="let week of calendar">
       <div
         *ngFor="let day of week"
-        class="min-h-24 p-2 border border-gray-200 rounded"
+        class="min-h-24 p-2 border border-gray-200 rounded transition-all-300"
         [class.bg-gray-100]="!day"
-        [class.bg-blue-50]="hasEntryForDate(day)"
+        [class.bg-pink-50]="hasEntryForDate(day)"
         [class.bg-white]="day && !hasEntryForDate(day)"
+        (mouseenter)="hoveredDay = day?.getDate() ?? -1"
+        (mouseleave)="hoveredDay = -1"
       >
         <!-- day number gen -->
-        <div *ngIf="day" class="text-sm font-medium mb-1 text-wrap">
-          <p class="text-3xl font-extrabold opacity-60 px-1 border-b-1 pb-2">
+        <div
+          *ngIf="day"
+          class="text-sm font-medium mb-1 flex px-1 border-b-1 pb-2"
+        >
+          <p class="text-3xl font-extrabold opacity-60 flex-grow">
             {{ day.getDate() }}
           </p>
+          <button
+            class="btn btn-sm rounded-full btn-primary relative size-8 my-auto"
+            [class.hidden]="hoveredDay !== day.getDate()"
+          >
+            <p class="absolute">+</p>
+          </button>
         </div>
 
-        <!-- entry preview-->
+        <!-- entry preview
         <div
           *ngIf="day && hasEntryForDate(day)"
           class="text-xs text-gray-600 truncate"
@@ -36,11 +47,13 @@
           <span *ngIf="(getEntryForDate(day)?.message?.length || 0) > 50"
             >...</span
           >
-        </div>
+        </div> -->
 
         <div class="grid grid-cols-2">
           <!-- You section -->
-          <div class="flex flex-col justify-center items-center h-fit">
+          <div
+            class="flex flex-col col-span-1 justify-center items-center h-fit"
+          >
             <img
               src="/assets/icons/heart-stamp.png"
               class="p-2 opacity-60"
@@ -49,7 +62,16 @@
             />
           </div>
           <!-- Partner section -->
-          <div class="flex flex-col justify-center items-center h-fit"></div>
+          <div
+            class="flex flex-col justify-center col-span-1 items-center h-fit"
+          >
+            <img
+              src="/assets/icons/heart-stamp.png"
+              class="p-2 opacity-60"
+              *ngIf="day"
+              [ngClass]="{ grayscale: !hasPartnerEntryForDate(day) }"
+            />
+          </div>
         </div>
       </div>
     </ng-container>
