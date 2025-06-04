@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgFor, NgIf, SlicePipe } from '@angular/common';
+import { NgClass, NgFor, NgIf, SlicePipe } from '@angular/common';
 import { AllEntriesResponse, DiaryEntry } from '../../../models/entry-data.model';
 
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [NgFor, NgIf, SlicePipe],
+  imports: [NgFor, NgIf, SlicePipe, NgClass],
   templateUrl: './calendar-grid.component.html',
 })
 export class CalendarGridComponent implements OnInit {
@@ -14,7 +14,8 @@ export class CalendarGridComponent implements OnInit {
   @Input() entries?: AllEntriesResponse | null;
 
   calendar: (Date | null)[][] = [];
-  entriesByDate: { [dateKey: string]: DiaryEntry } = {};
+  yourEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
+  partnerEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
 
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
@@ -29,12 +30,12 @@ export class CalendarGridComponent implements OnInit {
     let currentWeek: (Date | null)[] = [];
     let dayOfWeek = firstDay.getDay(); // 0 = Sunday
 
-    // Fill initial empty cells
+    // fill initial empty cells
     for (let i = 0; i < dayOfWeek; i++) {
       currentWeek.push(null);
     }
 
-    // Fill dates
+    // fill dates
     for (let day = 1; day <= lastDay.getDate(); day++) {
       currentWeek.push(new Date(year, month, day));
 
@@ -58,22 +59,19 @@ export class CalendarGridComponent implements OnInit {
   indexEntriesByDate() {
     if (!this.entries) return;
 
-    this.entriesByDate = {};
+    this.yourEntriesByDate = {};
+    this.partnerEntriesByDate = {};
 
-    // Index your entries by date
+    //  your entries by date
     this.entries.yourEntries.forEach(entry => {
       const dateKey = this.formatDateKey(new Date(entry.date));
-      this.entriesByDate[dateKey] = entry;
+      this.yourEntriesByDate[dateKey] = entry;
     });
 
-    // If you also want to show partner entries, you can combine them
-    // or create a separate method to distinguish them
+    //  partner entries by date
     this.entries.partnerEntries.forEach(entry => {
       const dateKey = this.formatDateKey(new Date(entry.date));
-      // You might want to handle conflicts if both you and partner have entries on same date
-      if (!this.entriesByDate[dateKey]) {
-        this.entriesByDate[dateKey] = entry;
-      }
+      this.partnerEntriesByDate[dateKey] = entry;
     });
   }
 
@@ -82,13 +80,47 @@ export class CalendarGridComponent implements OnInit {
     return date.toISOString().split('T')[0];
   }
 
-  getEntryForDate(date: Date | null): DiaryEntry | null {
+  // get your entry for a specific date
+  getYourEntryForDate(date: Date | null): DiaryEntry | null {
     if (!date) return null;
     const dateKey = this.formatDateKey(date);
-    return this.entriesByDate[dateKey] || null;
+    return this.yourEntriesByDate[dateKey] || null;
   }
 
+  // get partner entry for a specific date
+  getPartnerEntryForDate(date: Date | null): DiaryEntry | null {
+    if (!date) return null;
+    const dateKey = this.formatDateKey(date);
+    return this.partnerEntriesByDate[dateKey] || null;
+  }
+
+  // check if you have an entry for a specific date
+  hasYourEntryForDate(date: Date | null): boolean {
+    return this.getYourEntryForDate(date) !== null;
+  }
+
+  // check if partner has an entry for a specific date
+  hasPartnerEntryForDate(date: Date | null): boolean {
+    return this.getPartnerEntryForDate(date) !== null;
+  }
+
+  // check if either you or partner has an entry for a specific date
+  hasAnyEntryForDate(date: Date | null): boolean {
+    return this.hasYourEntryForDate(date) || this.hasPartnerEntryForDate(date);
+  }
+
+  // check if both you and partner have entries for a specific date
+  hasBothEntriesForDate(date: Date | null): boolean {
+    return this.hasYourEntryForDate(date) && this.hasPartnerEntryForDate(date);
+  }
+
+  // old method for backward compatibility to make sure the site doesn't break lol
+  getEntryForDate(date: Date | null): DiaryEntry | null {
+    return this.getYourEntryForDate(date) || this.getPartnerEntryForDate(date);
+  }
+
+  // old method for backwards comp
   hasEntryForDate(date: Date | null): boolean {
-    return this.getEntryForDate(date) !== null;
+    return this.hasAnyEntryForDate(date);
   }
 }

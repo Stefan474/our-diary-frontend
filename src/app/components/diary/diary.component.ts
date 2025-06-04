@@ -38,7 +38,6 @@ export class DiaryComponent implements OnInit {
     this.getUser();
     this.currentMonth = new Date().getMonth();
     const today = new Date();
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
     this.year = today.getFullYear();
   }
 

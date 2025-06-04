@@ -21,11 +21,13 @@
         [class.bg-white]="day && !hasEntryForDate(day)"
       >
         <!-- day number gen -->
-        <div *ngIf="day" class="text-sm font-medium mb-1">
-          {{ day.getDate() }}
+        <div *ngIf="day" class="text-sm font-medium mb-1 text-wrap">
+          <p class="text-3xl font-extrabold opacity-60 px-1 border-b-1 pb-2">
+            {{ day.getDate() }}
+          </p>
         </div>
 
-        <!-- entry preview -->
+        <!-- entry preview-->
         <div
           *ngIf="day && hasEntryForDate(day)"
           class="text-xs text-gray-600 truncate"
@@ -34,6 +36,20 @@
           <span *ngIf="(getEntryForDate(day)?.message?.length || 0) > 50"
             >...</span
           >
+        </div>
+
+        <div class="grid grid-cols-2">
+          <!-- You section -->
+          <div class="flex flex-col justify-center items-center h-fit">
+            <img
+              src="/assets/icons/heart-stamp.png"
+              class="p-2 opacity-60"
+              *ngIf="day"
+              [ngClass]="{ grayscale: !hasYourEntryForDate(day) }"
+            />
+          </div>
+          <!-- Partner section -->
+          <div class="flex flex-col justify-center items-center h-fit"></div>
         </div>
       </div>
     </ng-container>
