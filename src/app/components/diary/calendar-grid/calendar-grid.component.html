@@ -31,8 +31,8 @@
             {{ day.getDate() }}
           </p>
           <button
-            class="btn btn-sm rounded-full btn-primary relative size-8 my-auto"
-            [class.hidden]="hoveredDay !== day.getDate()"
+            class="btn btn-sm rounded-full btn-primary relative size-8 my-auto transition-opacity duration-200"
+            [class.opacity-0]="hoveredDay !== day.getDate()"
           >
             <p class="absolute">+</p>
           </button>
@@ -57,7 +57,7 @@
             <img
               src="/assets/icons/heart-stamp.png"
               class="p-2 opacity-60"
-              *ngIf="day"
+              *ngIf="day && day"
               [ngClass]="{ grayscale: !hasYourEntryForDate(day) }"
             />
           </div>
