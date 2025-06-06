@@ -38,7 +38,7 @@
   ></app-day-view>
 
   <!-- actual calendar grid -->
-  <div class="grid grid-cols-7 gap-1">
+  <div class="grid grid-cols-7 gap-1" [@calendarSwitch]="currentMonthKey">
     <ng-container *ngFor="let week of calendar">
       <div
         *ngFor="let day of week"

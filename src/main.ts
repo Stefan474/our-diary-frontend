@@ -8,12 +8,14 @@ import { importProvidersFrom } from '@angular/core';
 import { AuthInterceptor } from './app/interceptors/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, DatePipe } from '@angular/common';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
     importProvidersFrom(FormsModule, NgIf, NgFor),
     {
       provide: HTTP_INTERCEPTORS,

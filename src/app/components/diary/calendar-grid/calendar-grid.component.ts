@@ -2,12 +2,31 @@ import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgClass, NgFor, NgIf, SlicePipe, DatePipe } from '@angular/common';
 import { AllEntriesResponse, DiaryEntry } from '../../../models/entry-data.model';
 import { DayViewComponent } from './day-view/day-view.component';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
   imports: [NgFor, NgIf, NgClass, DatePipe, DayViewComponent],
   templateUrl: './calendar-grid.component.html',
+  animations: [
+    trigger('calendarSwitch', [
+      transition('* => *', [
+        style({
+          opacity: 0,
+          transform: 'translateX(30px) scale(0.95)',
+          filter: 'blur(2px)'
+        }),
+        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({
+            opacity: 1,
+            transform: 'translateX(0) scale(1)',
+            filter: 'blur(0px)'
+          })
+        ),
+      ])
+    ])
+  ]
 })
 export class CalendarGridComponent implements OnInit {
   @Input() month!: number; // 0-11
@@ -23,6 +42,7 @@ export class CalendarGridComponent implements OnInit {
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
     this.indexEntriesByDate();
+    this.currentMonthKey = `${this.year}-${this.month}`;
   }
 
   ngOnChanges(changes: any) {
@@ -32,8 +52,8 @@ export class CalendarGridComponent implements OnInit {
     }
     if (changes['month'] || changes['year']) {
       this.generateCalendar(this.year, this.month);
+      this.currentMonthKey = `${this.year}-${this.month}`;
     }
-
   }
   //base functions
   generateCalendar(year: number, month: number) {
@@ -83,18 +103,63 @@ export class CalendarGridComponent implements OnInit {
     this.selectedPartnerEntry = this.getPartnerEntryForDate(day);
   }
 
+
+  //aniamation stuff
+  currentMonthKey: string = '';
+
   //setters
-  setMonth(value: number) {
-    this.month = value;
-    this.generateCalendar(this.year, this.month);
-    if (value > 11) {
-      this.year++;
-      this.month = 0;
-    } else if (value < 0) {
-      this.year--;
-      this.month = 11;
+
+  setMonth(newMonth: number) {
+    let tempMonth = newMonth;
+    let tempYear = this.year;
+
+    if (tempMonth > 11) {
+      tempMonth = 0;
+      tempYear++;
+    } else if (tempMonth < 0) {
+      tempMonth = 11;
+      tempYear--;
     }
+
+    this.month = tempMonth;
+    this.year = tempYear;
+
+    this.currentMonthKey = `${tempYear}-${tempMonth}`;
+
+    this.generateCalendar(this.year, this.month);
   }
+
+
+  generateCalendarData(year: number, month: number): (Date | null)[][] {
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const calendar: (Date | null)[][] = [];
+
+    let currentWeek: (Date | null)[] = [];
+    let dayOfWeek = firstDay.getDay(); // 0 = Sunday
+
+    for (let i = 0; i < dayOfWeek; i++) {
+      currentWeek.push(null);
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      currentWeek.push(new Date(year, month, day));
+      if (currentWeek.length === 7) {
+        calendar.push(currentWeek);
+        currentWeek = [];
+      }
+    }
+
+    if (currentWeek.length > 0) {
+      while (currentWeek.length < 7) {
+        currentWeek.push(null);
+      }
+      calendar.push(currentWeek);
+    }
+
+    return calendar;
+  }
+
 
   indexEntriesByDate() {
     if (!this.entries) return;
