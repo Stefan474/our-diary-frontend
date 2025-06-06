@@ -13,7 +13,7 @@ import { CalendarGridComponent } from './calendar-grid/calendar-grid.component';
   standalone: true,
   templateUrl: './diary.component.html',
   styleUrls: ['./diary.component.css'],
-  imports: [NgIf, NgFor, DatePipe, FormsModule, CalendarGridComponent]
+  imports: [NgIf, NgFor, FormsModule, CalendarGridComponent]
 })
 export class DiaryComponent implements OnInit {
 

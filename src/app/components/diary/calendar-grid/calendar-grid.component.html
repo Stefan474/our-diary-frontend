@@ -1,6 +1,9 @@
 <div class="calendar-grid">
   <!-- day header -->
   <div class="grid grid-cols-7 gap-1 bg-primary text-white rounded-t-lg">
+    <div class="col-span-7 flex p-2">
+      <div>{{ monthDate | date : "LLLL" }}, {{ year }}</div>
+    </div>
     <div class="text-center font-semibold p-2">Sun</div>
     <div class="text-center font-semibold p-2">Mon</div>
     <div class="text-center font-semibold p-2">Tue</div>
@@ -38,24 +41,13 @@
           </button>
         </div>
 
-        <!-- entry preview
-        <div
-          *ngIf="day && hasEntryForDate(day)"
-          class="text-xs text-gray-600 truncate"
-        >
-          {{ getEntryForDate(day)?.message | slice : 0 : 50 }}
-          <span *ngIf="(getEntryForDate(day)?.message?.length || 0) > 50"
-            >...</span
-          >
-        </div> -->
-
         <div class="grid grid-cols-2">
           <!-- You section -->
           <div
             class="flex flex-col col-span-1 justify-center items-center h-fit"
           >
             <img
-              src="/assets/icons/heart-stamp.png"
+              src="/assets/icons/heart-stamp-you.png"
               class="p-2 opacity-60"
               *ngIf="day && day"
               [ngClass]="{ grayscale: !hasYourEntryForDate(day) }"
@@ -66,7 +58,7 @@
             class="flex flex-col justify-center col-span-1 items-center h-fit"
           >
             <img
-              src="/assets/icons/heart-stamp.png"
+              src="/assets/icons/heart-stamp-partner.png"
               class="p-2 opacity-60"
               *ngIf="day"
               [ngClass]="{ grayscale: !hasPartnerEntryForDate(day) }"

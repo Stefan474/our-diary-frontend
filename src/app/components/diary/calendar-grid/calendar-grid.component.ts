@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgClass, NgFor, NgIf, SlicePipe } from '@angular/common';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { NgClass, NgFor, NgIf, SlicePipe, DatePipe } from '@angular/common';
 import { AllEntriesResponse, DiaryEntry } from '../../../models/entry-data.model';
 
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [NgFor, NgIf, SlicePipe, NgClass],
+  imports: [NgFor, NgIf, SlicePipe, NgClass, DatePipe],
   templateUrl: './calendar-grid.component.html',
 })
 export class CalendarGridComponent implements OnInit {
@@ -21,6 +21,17 @@ export class CalendarGridComponent implements OnInit {
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
     this.indexEntriesByDate();
+  }
+
+  ngOnChanges(changes: any) {
+    if (changes['entries']) {
+      this.indexEntriesByDate();
+      this.generateCalendar(this.year, this.month);
+    }
+    if (changes['month'] || changes['year']) {
+      this.generateCalendar(this.year, this.month);
+    }
+
   }
 
   generateCalendar(year: number, month: number) {
@@ -79,6 +90,10 @@ export class CalendarGridComponent implements OnInit {
   formatDateKey(date: Date): string {
     // Format: YYYY-MM-DD
     return date.toISOString().split('T')[0];
+  }
+
+  get monthDate(): Date {
+    return new Date(this.year, this.month, 1);
   }
 
   // get your entry for a specific date
