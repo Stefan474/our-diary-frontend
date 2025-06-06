@@ -1,17 +1,41 @@
 <div class="calendar-grid">
   <!-- day header -->
   <div class="grid grid-cols-7 gap-1 bg-primary text-white rounded-t-lg">
-    <div class="col-span-7 flex p-2">
-      <div>{{ monthDate | date : "LLLL" }}, {{ year }}</div>
+    <div class="col-span-7 flex pt-2 mb-1 justify-start ml-4">
+      <p class="font-semibold text-xl w-[9ch]">
+        {{ monthDate | date : "MMM" }}. {{ year }}
+      </p>
+      <div class="flex gap-2 px-2">
+        <button
+          class="btn btn-sm btn-secondary rounded-md"
+          (click)="setMonth(month - 1)"
+        >
+          ←
+        </button>
+        <button
+          class="btn btn-sm btn-secondary rounded-md"
+          (click)="setMonth(month + 1)"
+        >
+          →
+        </button>
+      </div>
     </div>
-    <div class="text-center font-semibold p-2">Sun</div>
-    <div class="text-center font-semibold p-2">Mon</div>
-    <div class="text-center font-semibold p-2">Tue</div>
-    <div class="text-center font-semibold p-2">Wed</div>
-    <div class="text-center font-semibold p-2">Thu</div>
-    <div class="text-center font-semibold p-2">Fri</div>
-    <div class="text-center font-semibold p-2">Sat</div>
+    <div class="text-center text-lg font-semibold p-1">Sun</div>
+    <div class="text-center text-lg font-semibold p-1">Mon</div>
+    <div class="text-center text-lg font-semibold p-1">Tue</div>
+    <div class="text-center text-lg font-semibold p-1">Wed</div>
+    <div class="text-center text-lg font-semibold p-1">Thu</div>
+    <div class="text-center text-lg font-semibold p-1">Fri</div>
+    <div class="text-center text-lg font-semibold p-1">Sat</div>
   </div>
+
+  <app-day-view
+    *ngIf="selectedDate"
+    [date]="selectedDate"
+    [yourEntry]="selectedYourEntry"
+    [partnerEntry]="selectedPartnerEntry"
+    (close)="selectedDate = null"
+  ></app-day-view>
 
   <!-- actual calendar grid -->
   <div class="grid grid-cols-7 gap-1">
@@ -37,7 +61,13 @@
             class="btn btn-sm rounded-full btn-primary relative size-8 my-auto transition-opacity duration-200"
             [class.opacity-0]="hoveredDay !== day.getDate()"
           >
-            <p class="absolute">+</p>
+            <button
+              class="btn btn-sm rounded-full btn-primary relative size-8 my-auto transition-opacity duration-200"
+              [class.opacity-0]="hoveredDay !== day?.getDate()"
+              (click)="openDayView(day)"
+            >
+              +
+            </button>
           </button>
         </div>
 

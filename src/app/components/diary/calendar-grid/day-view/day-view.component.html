@@ -1,0 +1,31 @@
+<div
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+    <h2 class="text-xl font-semibold mb-4">
+      Entries for {{ date | date : "fullDate" }}
+    </h2>
+
+    <ng-container *ngIf="yourEntry || partnerEntry; else noEntries">
+      <div *ngIf="yourEntry" class="mb-4">
+        <h3 class="font-bold text-lg mb-1">Your Entry</h3>
+        <p>{{ yourEntry.message }}</p>
+      </div>
+
+      <div *ngIf="partnerEntry">
+        <h3 class="font-bold text-lg mb-1">Partner's Entry</h3>
+        <p>{{ partnerEntry.message }}</p>
+      </div>
+    </ng-container>
+
+    <ng-template #noEntries>
+      <p class="text-gray-500 text-center">No entries for this day.</p>
+    </ng-template>
+
+    <div class="mt-6 text-right">
+      <button class="btn btn-sm btn-secondary" (click)="onClose()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { NgClass, NgFor, NgIf, SlicePipe, DatePipe } from '@angular/common';
 import { AllEntriesResponse, DiaryEntry } from '../../../models/entry-data.model';
+import { DayViewComponent } from './day-view/day-view.component';
 
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [NgFor, NgIf, SlicePipe, NgClass, DatePipe],
+  imports: [NgFor, NgIf, SlicePipe, NgClass, DatePipe, DayViewComponent],
   templateUrl: './calendar-grid.component.html',
 })
 export class CalendarGridComponent implements OnInit {
@@ -18,6 +19,7 @@ export class CalendarGridComponent implements OnInit {
   partnerEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
   hoveredDay: number = -1;
 
+  //hooks and lifecycle
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
     this.indexEntriesByDate();
@@ -33,7 +35,7 @@ export class CalendarGridComponent implements OnInit {
     }
 
   }
-
+  //base functions
   generateCalendar(year: number, month: number) {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -66,6 +68,32 @@ export class CalendarGridComponent implements OnInit {
     }
 
     this.calendar = calendar;
+  }
+
+  //modal
+  selectedDate: Date | null = null;
+  selectedYourEntry: DiaryEntry | null = null;
+  selectedPartnerEntry: DiaryEntry | null = null;
+
+  openDayView(day: Date | null) {
+    if (!day) return;
+
+    this.selectedDate = day;
+    this.selectedYourEntry = this.getYourEntryForDate(day);
+    this.selectedPartnerEntry = this.getPartnerEntryForDate(day);
+  }
+
+  //setters
+  setMonth(value: number) {
+    this.month = value;
+    this.generateCalendar(this.year, this.month);
+    if (value > 11) {
+      this.year++;
+      this.month = 0;
+    } else if (value < 0) {
+      this.year--;
+      this.month = 11;
+    }
   }
 
   indexEntriesByDate() {
