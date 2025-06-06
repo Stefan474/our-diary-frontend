@@ -6,7 +6,7 @@ import { DayViewComponent } from './day-view/day-view.component';
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [NgFor, NgIf, SlicePipe, NgClass, DatePipe, DayViewComponent],
+  imports: [NgFor, NgIf, NgClass, DatePipe, DayViewComponent],
   templateUrl: './calendar-grid.component.html',
 })
 export class CalendarGridComponent implements OnInit {
