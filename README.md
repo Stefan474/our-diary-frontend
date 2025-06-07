@@ -1,21 +1,25 @@
 ## Our-Diary Frontend
 
-This is the Angular frontend for the Our-Diary project, a shared calendar/diary app built to demonstrate CRUD operations, user authentication, and reactive data handling using Angular. The backend is powered by .NET Core 8 Web API, while the frontend leverages Angular for a modular, component-driven architecture.
+Angular frontend for Our Diary - A long-distance relationship app to capture fleeting moments. Backend available upon request for interviews/recruiters 💖
 
 ### Tech Stack
 - **Angular** - Frontend framework
-- **RxJS** - Reactive programming
+- **RxJS** - State management
 - **Angular Router** - Client-side routing
 - **Angular Guards** - Route protection
 - **Angular Interceptors** - HTTP request/response handling
 - **Tailwind CSS** - Styling
   
 ### Features
-- **User Authentication:** Login and session management via JWT
-- **Diary Entry Management:** Create and read data entries (update delete left out on purpose) 
-- **Reactive Data Handling:** RxJS Observables for state management
-- **HTTP Interceptor:** Automatic JWT attachment to outgoing HTTP requests
-- **Route Guards:** Protect routes based on authentication state
+🧠 Secure Login – Simple, persistent login system powered by JWTs
+
+📖 Shared Diary Entries – Add and view daily entries between two connected users
+
+🔄 Real-Time Updates – Seamless experience using reactive data with Observables
+
+🛡️ Protected Routes – Pages stay private unless you're logged in
+
+🔗 Smart API Communication – JWTs are automatically sent with requests under the hood
 
 ### Project Screenshots
 <img src="https://i.imgur.com/nSPiqEM.png" alt="Image 1" width="700"/>
@@ -25,8 +29,10 @@ This is the Angular frontend for the Our-Diary project, a shared calendar/diary 
 <img src="https://i.imgur.com/ExohBvg.png" alt="Image 5" width="700"/>
 
 ### Next Steps
-- Implement data caching using BehaviorSubject
-- Add user profile management
-- Enhance error handling and user feedback
+- Currently improving the UX and polishing the backend:
+- Replacing SQLite with PostgreSQL (considering Supabase)
+- Adding a password hashing & salting library
 
+
+Refactoring the database structure to support upcoming features
 For any questions or feedback, feel free to reach out!
