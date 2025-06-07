@@ -10,14 +10,30 @@ import { trigger, transition, style, animate } from '@angular/animations';
   imports: [NgFor, NgIf, NgClass, DatePipe, DayViewComponent],
   templateUrl: './calendar-grid.component.html',
   animations: [
-    trigger('calendarSwitch', [
-      transition('* => *', [
+    trigger('slideLeft', [
+      transition(':enter', [
         style({
           opacity: 0,
-          transform: 'translateX(30px) scale(0.95)',
+          transform: 'translateX(100px) scale(0.95)',
           filter: 'blur(2px)'
         }),
-        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+        animate('450ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({
+            opacity: 1,
+            transform: 'translateX(0) scale(1)',
+            filter: 'blur(0px)'
+          })
+        ),
+      ])
+    ]),
+    trigger('slideRight', [
+      transition(':enter', [
+        style({
+          opacity: 0,
+          transform: 'translateX(-100px) scale(0.95)',
+          filter: 'blur(2px)'
+        }),
+        animate('450ms cubic-bezier(0.25, 0.8, 0.25, 1)',
           style({
             opacity: 1,
             transform: 'translateX(0) scale(1)',
@@ -42,7 +58,6 @@ export class CalendarGridComponent implements OnInit {
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
     this.indexEntriesByDate();
-    this.currentMonthKey = `${this.year}-${this.month}`;
   }
 
   ngOnChanges(changes: any) {
@@ -52,9 +67,9 @@ export class CalendarGridComponent implements OnInit {
     }
     if (changes['month'] || changes['year']) {
       this.generateCalendar(this.year, this.month);
-      this.currentMonthKey = `${this.year}-${this.month}`;
     }
   }
+
   //base functions
   generateCalendar(year: number, month: number) {
     const firstDay = new Date(year, month, 1);
@@ -104,14 +119,19 @@ export class CalendarGridComponent implements OnInit {
   }
 
 
-  //aniamation stuff
-  currentMonthKey: string = '';
 
-  //setters
+
+  //month setter and animation controller 2 in 1 :(
+  slideDirection: 'left' | 'right' = 'left';
+  showCalendar: boolean = true;
 
   setMonth(newMonth: number) {
     let tempMonth = newMonth;
     let tempYear = this.year;
+
+    // set direction based on month change
+    const isForward = newMonth > this.month ||
+      (newMonth === 0 && this.month === 11); // Dec -> Jan
 
     if (tempMonth > 11) {
       tempMonth = 0;
@@ -121,45 +141,20 @@ export class CalendarGridComponent implements OnInit {
       tempYear--;
     }
 
-    this.month = tempMonth;
-    this.year = tempYear;
+    // sets slide direction
+    this.slideDirection = isForward ? 'left' : 'right';
 
-    this.currentMonthKey = `${tempYear}-${tempMonth}`;
+    // hide/show to trigger enter animation
+    this.showCalendar = false;
 
-    this.generateCalendar(this.year, this.month);
+    setTimeout(() => {
+      // update properties and timeout for the anim to finish
+      this.month = tempMonth;
+      this.year = tempYear;
+      this.generateCalendar(this.year, this.month);
+      this.showCalendar = true;
+    }, 50); // short delay to allow dom to be destroyed
   }
-
-
-  generateCalendarData(year: number, month: number): (Date | null)[][] {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const calendar: (Date | null)[][] = [];
-
-    let currentWeek: (Date | null)[] = [];
-    let dayOfWeek = firstDay.getDay(); // 0 = Sunday
-
-    for (let i = 0; i < dayOfWeek; i++) {
-      currentWeek.push(null);
-    }
-
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-      currentWeek.push(new Date(year, month, day));
-      if (currentWeek.length === 7) {
-        calendar.push(currentWeek);
-        currentWeek = [];
-      }
-    }
-
-    if (currentWeek.length > 0) {
-      while (currentWeek.length < 7) {
-        currentWeek.push(null);
-      }
-      calendar.push(currentWeek);
-    }
-
-    return calendar;
-  }
-
 
   indexEntriesByDate() {
     if (!this.entries) return;

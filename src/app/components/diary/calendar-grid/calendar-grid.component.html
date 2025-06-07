@@ -1,7 +1,7 @@
 <div class="calendar-grid">
   <!-- day header -->
-  <div class="grid grid-cols-7 gap-1 bg-primary text-white rounded-t-lg">
-    <div class="col-span-7 flex pt-2 mb-1 justify-start ml-4">
+  <div class="grid grid-cols-7 gap-1 bg-primary/80 text-white rounded-t-lg">
+    <div class="col-span-7 flex pt-2 justify-start ml-4">
       <p class="font-semibold text-xl w-[9ch]">
         {{ monthDate | date : "MMM" }}. {{ year }}
       </p>
@@ -26,7 +26,7 @@
     <div class="text-center text-lg font-semibold p-1">Wed</div>
     <div class="text-center text-lg font-semibold p-1">Thu</div>
     <div class="text-center text-lg font-semibold p-1">Fri</div>
-    <div class="text-center text-lg font-semibold p-1">Sat</div>
+    <div class="text-center text-lg font-semibold p-1 mb-1">Sat</div>
   </div>
 
   <app-day-view
@@ -38,7 +38,11 @@
   ></app-day-view>
 
   <!-- actual calendar grid -->
-  <div class="grid grid-cols-7 gap-1" [@calendarSwitch]="currentMonthKey">
+  <div
+    *ngIf="showCalendar && slideDirection === 'left'"
+    [@slideLeft]
+    class="grid grid-cols-7 gap-1"
+  >
     <ng-container *ngFor="let week of calendar">
       <div
         *ngFor="let day of week"
@@ -54,7 +58,73 @@
           *ngIf="day"
           class="text-sm font-medium mb-1 flex px-1 border-b-1 pb-2"
         >
-          <p class="text-3xl font-extrabold opacity-60 flex-grow">
+          <p class="text-3xl font-extrabold opacity-60 flex-grow text-red-500">
+            {{ day.getDate() }}
+          </p>
+          <button
+            class="btn btn-sm rounded-full btn-primary relative size-8 my-auto transition-opacity duration-200"
+            [class.opacity-0]="hoveredDay !== day.getDate()"
+          >
+            <button
+              class="btn btn-sm rounded-full btn-primary relative size-8 my-auto transition-opacity duration-200"
+              [class.opacity-0]="hoveredDay !== day?.getDate()"
+              (click)="openDayView(day)"
+            >
+              +
+            </button>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2">
+          <!-- You section -->
+          <div
+            class="flex flex-col col-span-1 justify-center items-center h-fit"
+          >
+            <img
+              src="/assets/icons/heart-stamp-you.png"
+              class="p-2 opacity-60"
+              *ngIf="day && day"
+              [ngClass]="{ grayscale: !hasYourEntryForDate(day) }"
+            />
+          </div>
+          <!-- Partner section -->
+          <div
+            class="flex flex-col justify-center col-span-1 items-center h-fit"
+          >
+            <img
+              src="/assets/icons/heart-stamp-partner.png"
+              class="p-2 opacity-60"
+              *ngIf="day"
+              [ngClass]="{ grayscale: !hasPartnerEntryForDate(day) }"
+            />
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- actual calendar grid -->
+  <div
+    *ngIf="showCalendar && slideDirection === 'right'"
+    [@slideRight]
+    class="grid grid-cols-7 gap-1"
+  >
+    <ng-container *ngFor="let week of calendar">
+      <div
+        *ngFor="let day of week"
+        class="min-h-24 p-2 border border-gray-200 rounded transition-all-300"
+        [class.bg-gray-100]="!day"
+        [class.bg-pink-50]="hasEntryForDate(day)"
+        [class.bg-white]="day && !hasEntryForDate(day)"
+        (mouseenter)="hoveredDay = day?.getDate() ?? -1"
+        (mouseleave)="hoveredDay = -1"
+      >
+        <!-- day number gen -->
+        <div
+          *ngIf="day"
+          class="text-sm font-medium mb-1 flex px-1 border-b-1 pb-2"
+        >
+          <p class="text-3xl font-extrabold opacity-60 flex-grow text-red-500">
             {{ day.getDate() }}
           </p>
           <button

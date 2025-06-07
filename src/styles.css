@@ -2,3 +2,11 @@
 @plugin "daisyui" {
   themes: valentine --default;
 }
+
+@plugin "daisyui/theme" {
+  name: "valentine";
+  default: true;
+  --color-primary: var(--color-red-500);
+  --color-primary-content: #ffffff;
+  --text-primary: var(--color-red-500);
+}
