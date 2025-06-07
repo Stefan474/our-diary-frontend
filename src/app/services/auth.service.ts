@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { tap } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 
@@ -13,7 +13,10 @@ import { HttpHeaders } from '@angular/common/http';
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    console.log('Environment:', environment);
+    console.log('API URL:', this.apiUrl);
+  }
 
   //login, register and session handing
   login(email: string, password: string): Observable<any> {
@@ -96,7 +99,7 @@ export class AuthService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  return this.http.post(`${this.apiUrl}/auth/connect-partner`, { partnerEmail: email }, { headers });
+    return this.http.post(`${this.apiUrl}/auth/connect-partner`, { partnerEmail: email }, { headers });
   }
 
   //adding posts
@@ -105,7 +108,7 @@ export class AuthService {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  return this.http.post(`${this.apiUrl}/entry`, { note: message }, { headers });
+    return this.http.post(`${this.apiUrl}/entry`, { note: message }, { headers });
   }
 
 }
