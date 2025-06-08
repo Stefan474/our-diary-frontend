@@ -33,115 +33,8 @@
 
       <!-- New UI -->
       <!--TODO: Re-do the calendar logic and tie a cell to days instead of numbers or make a year constructor-->
-      <div
-        class="bg-white shadow-lg rounded-lg p-8 w-full min-h-screen hidden"
-        *ngIf="user.isConnected"
-      >
-        <div class="mt-5 flex bg-primary w-full p-4 rounded-t-lg">
-          <div class="flex gap-2">
-            <p class="text-white text-xl font-bold">
-              {{ currentMonth }}
-            </p>
-          </div>
-        </div>
-        <ul class="grid grid-cols-7 grid-rows-5 w-full">
-          <li
-            class="col-span-1 row-span-1 w-full"
-            *ngFor="let day of dayNumbers"
-          >
-            <div class="w-full h-full border-1 border-pink-400 flex flex-col">
-              <p
-                class="text-3xl font-extrabold opacity-60 px-1 border-b-1 pb-2"
-              >
-                {{ day }}
-              </p>
-              <div class="grid grid-cols-2">
-                <!-- You section -->
-                <div
-                  class="flex flex-col justify-center items-center h-full py-5 pt-3 relative"
-                >
-                  <p
-                    class="origin-left bottom-0.5 absolute font-extrabold text-gray-400/50 text-2xl rotate-350 left-[40%]"
-                  >
-                    you
-                  </p>
-                </div>
-                <!-- Partner section -->
-                <div
-                  class="flex flex-col justify-center items-center h-fit py-5 pt-3 relative"
-                >
-                  <p
-                    class="origin-left bottom-0 absolute font-extrabold text-primary/50 text-2xl rotate-350 left-[30%]"
-                  >
-                    lover
-                  </p>
-                </div>
-              </div>
-              <!-- <div *ngIf="allEntries.yourEntries[day]">
-              {{ allEntries.yourEntries[day].message }}
-            </div>-->
-            </div>
-          </li>
-        </ul>
-      </div>
+
       <!--Partner Connection Interface-->
-      <div class="" *ngIf="!user.isConnected">
-        <div class="">
-          <div
-            class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full"
-          >
-            <!-- Left Column - Image -->
-            <div class="w-1/2 hidden md:block">
-              <img
-                src="https://i.ytimg.com/vi/u7SbGrPBugA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgVCg6MA8=&rs=AOn4CLBBNLxZmawMIPnUzXSACLmawQoL1Q"
-                alt="Login"
-                class="h-full w-full object-cover"
-              />
-            </div>
-
-            <!-- Right Column - Form -->
-            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
-              <h2 class="text-2xl font-bold mb-1 text-gray-800">
-                You have no partner 💔
-              </h2>
-              <p class="mb-4">{{ message }}</p>
-
-              <div class="mb-4">
-                <input
-                  [(ngModel)]="partnerEmail"
-                  type="text"
-                  placeholder="Email"
-                  class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div class="flex justify-start gap-2 items-center mb-6">
-                <button
-                  class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
-                  (click)="handleConnect()"
-                  *ngIf="!user.partnerEmail"
-                >
-                  Connect
-                </button>
-
-                <button
-                  class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
-                  (click)="handleConfirm()"
-                  *ngIf="user.partnerEmail"
-                >
-                  Confirm
-                </button>
-                <button
-                  class="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
-                  (click)="logout()"
-                >
-                  Log Out
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!--Add Entry Interface-->
       <div
@@ -169,6 +62,63 @@
                 class="bg-red-500 text-white px-4 py-2 rounded"
               >
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="" *ngIf="!user.isConnected">
+      <div class="">
+        <div
+          class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full"
+        >
+          <!-- Left Column - Image -->
+          <div class="w-1/2 hidden md:block">
+            <img
+              src="https://i.ytimg.com/vi/u7SbGrPBugA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgVCg6MA8=&rs=AOn4CLBBNLxZmawMIPnUzXSACLmawQoL1Q"
+              alt="Login"
+              class="h-full w-full object-cover"
+            />
+          </div>
+
+          <!-- Right Column - Form -->
+          <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+            <h2 class="text-2xl font-bold mb-1 text-gray-800">
+              You have no partner 💔
+            </h2>
+            <p class="mb-4">{{ message }}</p>
+
+            <div class="mb-4">
+              <input
+                [(ngModel)]="partnerEmail"
+                type="text"
+                placeholder="Email"
+                class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <div class="flex justify-start gap-2 items-center mb-6">
+              <button
+                class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
+                (click)="handleConnect()"
+                *ngIf="!user.partnerEmail"
+              >
+                Connect
+              </button>
+
+              <button
+                class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
+                (click)="handleConfirm()"
+                *ngIf="user.partnerEmail"
+              >
+                Confirm
+              </button>
+              <button
+                class="bg-red-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all"
+                (click)="logout()"
+              >
+                Log Out
               </button>
             </div>
           </div>
