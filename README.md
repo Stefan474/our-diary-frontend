@@ -22,11 +22,12 @@ Angular frontend for Our Diary - A long-distance relationship app to capture fle
 🔗 Smart API Communication – JWTs are automatically sent with requests under the hood
 
 ### Project Screenshots
+
+![ezgif-127681dc436a14](https://github.com/user-attachments/assets/b05adcca-6e1f-4364-a02e-48a54c5ac579)
 <img src="https://i.imgur.com/nSPiqEM.png" alt="Image 1" width="700"/>
 <img src="https://i.imgur.com/OAVy8H2.png" alt="Image 2" width="700"/>
 <img src="https://i.imgur.com/yqQzB4z.png" alt="Image 3" width="700"/>
-<img src="https://i.imgur.com/ASoxhxq.png" alt="Image 4" width="700"/>
-<img src="https://i.imgur.com/ExohBvg.png" alt="Image 5" width="700"/>
+
 
 ### Next Steps
 - Currently improving the UX and polishing the backend:
