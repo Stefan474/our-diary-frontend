@@ -1,7 +1,8 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full">
-
-    <!-- Left Column - Image -->
+  <div
+    class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full"
+  >
+    <!-- Left Column – Image -->
     <div class="w-1/2 hidden md:block">
       <img
         src="https://i.ytimg.com/vi/u7SbGrPBugA/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGHIgVCg6MA8=&rs=AOn4CLBBNLxZmawMIPnUzXSACLmawQoL1Q"
@@ -10,38 +11,90 @@
       />
     </div>
 
-    <!-- Right Column - Form -->
+    <!-- Right Column – Form -->
     <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
       <h2 class="text-2xl font-bold mb-1 text-gray-800">Welcome Back</h2>
-      <p class="mb-4">Sign in to your account</p>
+      <p class="mb-4">Sign in to your account or register</p>
 
-      <div class="mb-4">
-        <input
-        [(ngModel)]="email"
-          type="text"
-          placeholder="Email"
-          class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      <form #authForm="ngForm" (ngSubmit)="handleRegister()">
+        <!-- Email -->
+        <div class="mb-4">
+          <input
+            name="email"
+            [(ngModel)]="email"
+            #emailModel="ngModel"
+            type="email"
+            placeholder="Email"
+            required
+            email
+            class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              emailModel.invalid && (emailModel.dirty || emailModel.touched)
+            "
+          >
+            <div *ngIf="emailModel.errors?.['required']">
+              Email is required.
+            </div>
+            <div *ngIf="emailModel.errors?.['email']">
+              Must be a valid email.
+            </div>
+          </div>
+        </div>
 
-      <div class="mb-6">
-        <input
-        [(ngModel)]="password"
-          type="password"
-          placeholder="Password"
-          class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+        <!-- Password -->
+        <div class="mb-6">
+          <input
+            name="password"
+            [(ngModel)]="password"
+            #passwordModel="ngModel"
+            type="password"
+            placeholder="Password"
+            required
+            minlength="8"
+            pattern="(?=.*\d).{8,}"
+            class="border border-gray-300 rounded w-full p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <div
+            class="text-red-600 text-sm mt-1"
+            *ngIf="
+              passwordModel.invalid &&
+              (passwordModel.dirty || passwordModel.touched)
+            "
+          >
+            <div *ngIf="passwordModel.errors?.['required']">
+              Password is required.
+            </div>
+            <div *ngIf="passwordModel.errors?.['minlength']">
+              At least 8 characters.
+            </div>
+            <div *ngIf="passwordModel.errors?.['pattern']">
+              Must contain at least one number.
+            </div>
+          </div>
+        </div>
 
-      <div class="flex justify-start gap-2 items-center mb-6">
-        <button class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all" (click)="handleLogin()">
-          Login
-        </button>
+        <!-- Actions -->
+        <div class="flex gap-2 items-center">
+          <button
+            type="submit"
+            [disabled]="authForm.invalid"
+            class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-all disabled:opacity-50"
+          >
+            Register
+          </button>
 
-        <button class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded" (click)="handleRegister()">
-          Register
-        </button>
-      </div>
+          <button
+            type="button"
+            (click)="handleLogin()"
+            class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded"
+          >
+            Login
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
