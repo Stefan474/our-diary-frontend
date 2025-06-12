@@ -25,6 +25,7 @@ export class DiaryComponent implements OnInit {
   currentMonth: number = 1;
   currentDay: number = 0;
   year: number = 2025;
+  loading: boolean = true;
 
   constructor(private authService: AuthService) { }
 
@@ -82,6 +83,8 @@ export class DiaryComponent implements OnInit {
         localStorage.setItem('user', JSON.stringify(response));
         console.log('User stored:', localStorage.getItem('user'));
         this.user = response;
+        this.loading = false;
+
       },
       (error) => {
         console.error('getUser() error:', error);

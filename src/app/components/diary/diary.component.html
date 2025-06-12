@@ -31,11 +31,6 @@
         ></app-calendar-grid>
       </div>
 
-      <!-- New UI -->
-      <!--TODO: Re-do the calendar logic and tie a cell to days instead of numbers or make a year constructor-->
-
-      <!--Partner Connection Interface-->
-
       <!--Add Entry Interface-->
       <div
         *ngIf="addEntry"
@@ -68,7 +63,8 @@
         </div>
       </div>
     </div>
-    <div class="" *ngIf="!user.isConnected">
+    <!-- No Partner Interface -->
+    <div class="" *ngIf="!user.isConnected && !loading">
       <div class="">
         <div
           class="bg-white shadow-lg rounded-lg overflow-hidden flex max-w-4xl w-full"
@@ -124,6 +120,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <!-- Loading Spinner -->
+    <div class="" *ngIf="!user.isConnected && loading">
+      <span class="loading loading-infinity loading-xl"></span>
     </div>
   </div>
 </div>
