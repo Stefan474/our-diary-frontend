@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { NgClass, NgFor, NgIf, SlicePipe, DatePipe } from '@angular/common';
+import { NgClass, NgFor, NgIf, DatePipe } from '@angular/common';
 import { AllEntriesResponse, DiaryEntry } from '../../../models/entry-data.model';
 import { DayViewComponent } from './day-view/day-view.component';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -12,49 +12,41 @@ import { trigger, transition, style, animate } from '@angular/animations';
   animations: [
     trigger('slideLeft', [
       transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'translateX(100px) scale(0.95)',
-          filter: 'blur(2px)'
-        }),
+        style({ opacity: 0, transform: 'translateX(100px) scale(0.95)', filter: 'blur(2px)' }),
         animate('450ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({
-            opacity: 1,
-            transform: 'translateX(0) scale(1)',
-            filter: 'blur(0px)'
-          })
+          style({ opacity: 1, transform: 'translateX(0) scale(1)', filter: 'blur(0px)' })
         ),
       ])
     ]),
     trigger('slideRight', [
       transition(':enter', [
-        style({
-          opacity: 0,
-          transform: 'translateX(-100px) scale(0.95)',
-          filter: 'blur(2px)'
-        }),
+        style({ opacity: 0, transform: 'translateX(-100px) scale(0.95)', filter: 'blur(2px)' }),
         animate('450ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({
-            opacity: 1,
-            transform: 'translateX(0) scale(1)',
-            filter: 'blur(0px)'
-          })
+          style({ opacity: 1, transform: 'translateX(0) scale(1)', filter: 'blur(0px)' })
         ),
       ])
     ])
   ]
 })
-export class CalendarGridComponent implements OnInit {
+export class CalendarGridComponent implements OnInit, OnChanges {
   @Input() month!: number; // 0-11
   @Input() year!: number;
   @Input() entries?: AllEntriesResponse | null;
 
   calendar: (Date | null)[][] = [];
-  yourEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
-  partnerEntriesByDate: { [dateKey: string]: DiaryEntry } = {};
-  hoveredDay: number = -1;
+  yourEntriesByDate: Record<string, DiaryEntry> = {};
+  partnerEntriesByDate: Record<string, DiaryEntry> = {};
+  hoveredDay = -1;
 
-  //hooks and lifecycle
+  // modal
+  selectedDate: Date | null = null;
+  selectedYourEntry: DiaryEntry | null = null;
+  selectedPartnerEntry: DiaryEntry | null = null;
+
+  // animation
+  slideDirection: 'left' | 'right' = 'left';
+  showCalendar = true;
+
   ngOnInit() {
     this.generateCalendar(this.year, this.month);
     this.indexEntriesByDate();
@@ -70,161 +62,121 @@ export class CalendarGridComponent implements OnInit {
     }
   }
 
-  //base functions
-  generateCalendar(year: number, month: number) {
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const calendar: (Date | null)[][] = [];
+  private generateCalendar(year: number, month: number) {
+    // how many days in this UTC-month:
+    const daysInUTCmonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
-    let currentWeek: (Date | null)[] = [];
-    let dayOfWeek = firstDay.getDay(); // 0 = Sunday
+    // what weekday does the 1st fall on (local)?
+    const firstLocal = new Date(year, month, 1);
+    const startDow = firstLocal.getDay(); // 0=Sun .. 6=Sat
 
-    // fill initial empty cells
-    for (let i = 0; i < dayOfWeek; i++) {
-      currentWeek.push(null);
+    const cal: (Date | null)[][] = [];
+    let week: (Date | null)[] = [];
+
+    // leading blanks
+    for (let i = 0; i < startDow; i++) {
+      week.push(null);
     }
 
-    // fill dates
-    for (let day = 1; day <= lastDay.getDate(); day++) {
-      currentWeek.push(new Date(year, month, day));
-
-      if (currentWeek.length === 7) {
-        calendar.push(currentWeek);
-        currentWeek = [];
+    // fill each day as a UTC-constructed Date
+    for (let d = 1; d <= daysInUTCmonth; d++) {
+      week.push(new Date(Date.UTC(year, month, d)));
+      if (week.length === 7) {
+        cal.push(week);
+        week = [];
       }
     }
-
-    // Fill remaining cells
-    if (currentWeek.length > 0) {
-      while (currentWeek.length < 7) {
-        currentWeek.push(null);
+    // trailing blanks
+    if (week.length) {
+      while (week.length < 7) {
+        week.push(null);
       }
-      calendar.push(currentWeek);
+      cal.push(week);
     }
 
-    this.calendar = calendar;
+    this.calendar = cal;
   }
-
-  //modal
-  selectedDate: Date | null = null;
-  selectedYourEntry: DiaryEntry | null = null;
-  selectedPartnerEntry: DiaryEntry | null = null;
 
   openDayView(day: Date | null) {
     if (!day) return;
-
     this.selectedDate = day;
     this.selectedYourEntry = this.getYourEntryForDate(day);
     this.selectedPartnerEntry = this.getPartnerEntryForDate(day);
   }
 
-
-
-
-  //month setter and animation controller 2 in 1 :(
-  slideDirection: 'left' | 'right' = 'left';
-  showCalendar: boolean = true;
-
   setMonth(newMonth: number) {
-    let tempMonth = newMonth;
-    let tempYear = this.year;
+    let m = newMonth, y = this.year;
+    const forward = newMonth > this.month || (newMonth === 0 && this.month === 11);
 
-    // set direction based on month change
-    const isForward = newMonth > this.month ||
-      (newMonth === 0 && this.month === 11); // Dec -> Jan
+    if (m < 0) { m = 11; y--; }
+    else if (m > 11) { m = 0; y++; }
 
-    if (tempMonth > 11) {
-      tempMonth = 0;
-      tempYear++;
-    } else if (tempMonth < 0) {
-      tempMonth = 11;
-      tempYear--;
-    }
-
-    // sets slide direction
-    this.slideDirection = isForward ? 'left' : 'right';
-
-    // hide/show to trigger enter animation
+    this.slideDirection = forward ? 'left' : 'right';
     this.showCalendar = false;
 
     setTimeout(() => {
-      // update properties and timeout for the anim to finish
-      this.month = tempMonth;
-      this.year = tempYear;
-      this.generateCalendar(this.year, this.month);
+      this.month = m;
+      this.year = y;
+      this.generateCalendar(y, m);
       this.showCalendar = true;
-    }, 50); // short delay to allow dom to be destroyed
+    }, 50);
   }
 
-  indexEntriesByDate() {
+  private indexEntriesByDate() {
     if (!this.entries) return;
-
     this.yourEntriesByDate = {};
     this.partnerEntriesByDate = {};
 
-    //  your entries by date
-    this.entries.yourEntries.forEach(entry => {
-      const dateKey = this.formatDateKey(new Date(entry.date));
-      this.yourEntriesByDate[dateKey] = entry;
-    });
-
-    //  partner entries by date
-    this.entries.partnerEntries.forEach(entry => {
-      const dateKey = this.formatDateKey(new Date(entry.date));
-      this.partnerEntriesByDate[dateKey] = entry;
-    });
+    for (const e of this.entries.yourEntries) {
+      const d = new Date(e.date);              // parsed as UTC
+      this.yourEntriesByDate[this.formatDateKey(d)] = e;
+    }
+    for (const e of this.entries.partnerEntries) {
+      const d = new Date(e.date);
+      this.partnerEntriesByDate[this.formatDateKey(d)] = e;
+    }
   }
 
-  formatDateKey(date: Date): string {
-    // Format: YYYY-MM-DD
-    return date.toISOString().split('T')[0];
+  /** YYYY-MM-DD using UTC getters only */
+  private formatDateKey(date: Date): string {
+    const Y = date.getUTCFullYear();
+    const M = String(date.getUTCMonth() + 1).padStart(2, '0');
+    const D = String(date.getUTCDate()).padStart(2, '0');
+    return `${Y}-${M}-${D}`;
   }
 
-  get monthDate(): Date {
-    return new Date(this.year, this.month, 1);
-  }
-
-  // get your entry for a specific date
-  getYourEntryForDate(date: Date | null): DiaryEntry | null {
+  private getYourEntryForDate(date: Date | null) {
     if (!date) return null;
-    const dateKey = this.formatDateKey(date);
-    return this.yourEntriesByDate[dateKey] || null;
+    return this.yourEntriesByDate[this.formatDateKey(date)] || null;
   }
-
-  // get partner entry for a specific date
-  getPartnerEntryForDate(date: Date | null): DiaryEntry | null {
+  private getPartnerEntryForDate(date: Date | null) {
     if (!date) return null;
-    const dateKey = this.formatDateKey(date);
-    return this.partnerEntriesByDate[dateKey] || null;
+    return this.partnerEntriesByDate[this.formatDateKey(date)] || null;
   }
 
-  // check if you have an entry for a specific date
   hasYourEntryForDate(date: Date | null): boolean {
-    return this.getYourEntryForDate(date) !== null;
+    return !!this.getYourEntryForDate(date);
   }
-
-  // check if partner has an entry for a specific date
   hasPartnerEntryForDate(date: Date | null): boolean {
-    return this.getPartnerEntryForDate(date) !== null;
+    return !!this.getPartnerEntryForDate(date);
   }
-
-  // check if either you or partner has an entry for a specific date
   hasAnyEntryForDate(date: Date | null): boolean {
     return this.hasYourEntryForDate(date) || this.hasPartnerEntryForDate(date);
   }
-
-  // check if both you and partner have entries for a specific date
   hasBothEntriesForDate(date: Date | null): boolean {
     return this.hasYourEntryForDate(date) && this.hasPartnerEntryForDate(date);
   }
 
-  // old method for backward compatibility to make sure the site doesn't break lol
-  getEntryForDate(date: Date | null): DiaryEntry | null {
+  // backwards-compat
+  getEntryForDate(date: Date | null) {
     return this.getYourEntryForDate(date) || this.getPartnerEntryForDate(date);
   }
-
-  // old method for backwards comp
-  hasEntryForDate(date: Date | null): boolean {
+  hasEntryForDate(date: Date | null) {
     return this.hasAnyEntryForDate(date);
+  }
+
+  /** still use local for the display header */
+  get monthDate(): Date {
+    return new Date(this.year, this.month, 1);
   }
 }
